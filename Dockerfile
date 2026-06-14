@@ -1,6 +1,6 @@
 # === Build builder image ===
 
-FROM gradle:8.4.0-jdk11 AS build
+FROM docker.io/library/gradle:9.5.1-jdk25@sha256:8de3543f1772bb66be3b275893e5977b6d8bd2b0d25551faa5846a821d1f0600 AS build
 
 WORKDIR /home/builder
 
@@ -11,7 +11,7 @@ COPY lib/ ./
 RUN gradle --no-daemon -i shadowJar \
     && cp build/libs/autotest-runner.jar .
 
-FROM maven:3.8.6-jdk-11-slim AS cache
+FROM docker.io/library/maven:3.9.16-eclipse-temurin-25-noble@sha256:01ef98a139ed64622c086bac54d1e167453d0f2ff68b69d00978f26d8736215c AS cache
 
 # Ensure exercise dependencies are downloaded
 WORKDIR /opt/exercise
@@ -21,7 +21,7 @@ RUN mvn test dependency:go-offline -DexcludeReactor=false
 
 # === Build runtime image ===
 
-FROM maven:3.8.6-jdk-11-slim
+FROM docker.io/library/maven:3.9.16-eclipse-temurin-25-noble@sha256:01ef98a139ed64622c086bac54d1e167453d0f2ff68b69d00978f26d8736215c
 WORKDIR /opt/test-runner
 
 # Copy binary and launcher script
