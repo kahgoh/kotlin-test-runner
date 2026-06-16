@@ -11,7 +11,7 @@ COPY lib/ ./
 RUN gradle --no-daemon -i shadowJar \
     && cp build/libs/autotest-runner.jar .
 
-FROM docker.io/library/maven:3.9.16-eclipse-temurin-25-noble@sha256:01ef98a139ed64622c086bac54d1e167453d0f2ff68b69d00978f26d8736215c AS cache
+FROM docker.io/library/maven:3.9.16-eclipse-temurin-25-alpine@sha256:1a1f3bd96046f84c5beeb1f28bf909f9618b9dd6ef8d5af404e82dc67cf2cef9 AS cache
 
 # Ensure exercise dependencies are downloaded
 WORKDIR /opt/exercise
@@ -21,7 +21,7 @@ RUN mvn test dependency:go-offline -DexcludeReactor=false
 
 # === Build runtime image ===
 
-FROM docker.io/library/maven:3.9.16-eclipse-temurin-25-noble@sha256:01ef98a139ed64622c086bac54d1e167453d0f2ff68b69d00978f26d8736215c
+FROM docker.io/library/maven:3.9.16-eclipse-temurin-25-alpine@sha256:1a1f3bd96046f84c5beeb1f28bf909f9618b9dd6ef8d5af404e82dc67cf2cef9
 WORKDIR /opt/test-runner
 
 # Copy binary and launcher script
